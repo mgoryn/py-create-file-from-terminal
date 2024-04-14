@@ -20,24 +20,24 @@ def create_file(
         return
 
     # Get current timestamp
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # Check if file exists, if yes, append content
     if os.path.exists(filepath):
-        with open(filepath, 'a') as file:
-            file.write('\n\n' + timestamp + '\n')
+        with open(filepath, "a") as file:
+            file.write("\n\n" + timestamp + "\n")
             for line in content:
-                file.write(line + '\n')
+                file.write(line + "\n")
     else:
-        with open(filepath, 'w') as file:
-            file.write(timestamp + '\n')
+        with open(filepath, "w") as file:
+            file.write(timestamp + "\n")
             for line in content:
-                file.write(line + '\n')
+                file.write(line + "\n")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Create directory or file with content")
-    parser.add_argument("-d", "--directory", nargs='+', help="Directory path to create")
+    parser.add_argument("-d", "--directory", nargs="+", help="Directory path to create")
     parser.add_argument("-f", "--filename", help="File name to create")
     args = parser.parse_args()
 
