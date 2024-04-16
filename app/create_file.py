@@ -20,8 +20,10 @@ def create_file(directory: str, filename: str, content: list[str]) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Create directory or file with content")
-    parser.add_argument("-d", "--directory", nargs="+", help="Directory path to create")
+    parser = argparse.ArgumentParser(
+        description="Create directory or file with content")
+    parser.add_argument(
+        "-d", "--directory", nargs="+", help="Directory path to create")
     parser.add_argument("-f", "--filename", help="File name to create")
     args = parser.parse_args()
 
@@ -34,7 +36,6 @@ def main() -> None:
     else:
         directory = None
         filename = args.filename
-
 
     content = []
     print("Enter content lines (type 'stop' to finish):")
