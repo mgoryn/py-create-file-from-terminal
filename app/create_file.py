@@ -1,50 +1,50 @@
 import os
 import argparse
 from datetime import datetime
-from typing import List, Optional
 
 
-def create_file(
-        directory: Optional[str], filename: Optional[str], content: List[str]
-) -> None:
-    # Create directory if it doesn't exist
+def create_file(directory: str, filename: str, content: list[str]) -> None:
     if directory:
         os.makedirs(directory, exist_ok=True)
-        return  # Exit function if only creating directories
+    filepath = os.path.join(directory, filename)
 
-    # If directory is None but filename is provided, create the file
-    if filename:
-        filepath = filename
-    else:
-        print("Please provide either -d or -f flag.")
-        return
-
-    # Get current timestamp
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Check if file exists, if yes, append content
-    if os.path.exists(filepath):
-        with open(filepath, "a") as file:
-            file.write("\n\n" + timestamp + "\n")
-            for line in content:
-                file.write(line + "\n")
-    else:
-        with open(filepath, "w") as file:
-            file.write(timestamp + "\n")
-            for line in content:
-                file.write(line + "\n")
+    mode = "w" if not os.path.exists(filepath) else "a"
+    with open(filepath, mode) as file:
+        if mode == "a":
+            file.write("\n\n")
+        file.write(timestamp + "\n")
+        for index, line in enumerate(content, start=1):
+            file.write(f"{index} {line}\n")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Create directory or file with content")
-    parser.add_argument(
-        "-d", "--directory", nargs="+", help="Directory path to create")
+    parser = argparse.ArgumentParser(description="Create directory or file with content")
+    parser.add_argument("-d", "--directory", nargs="+", help="Directory path to create")
     parser.add_argument("-f", "--filename", help="File name to create")
     args = parser.parse_args()
 
-    # Call create_file function with provided arguments
-    create_file(args.directory, args.filename, [])
+    if not args.directory and not args.filename:
+        parser.error("Please provide either -d or -f flag.")
+
+    if args.directory:
+        directory = os.path.join(*args.directory)
+        filename = args.filename if args.filename else "file.txt"
+    else:
+        directory = None
+        filename = args.filename
+
+
+    content = []
+    print("Enter content lines (type 'stop' to finish):")
+    while True:
+        line = input()
+        if line.lower() == "stop":
+            break
+        content.append(line)
+
+    create_file(directory, filename, content)
     print("Directory/File created successfully.")
 
 
